@@ -1,15 +1,11 @@
-# K8S Task - Deploy 3 NGINX replicas
+# Description
 
-**Presented to:**    
-_Mohammed Omar_    
-
-**Presented by:**   
-_Islam Khaled_    
-
-13 June 2023
+Establishing a Local Kubernetes Environment and Deploying Replicas of Nginx Images for Internal Access via Cluster IP Service
 
 -----------------------------------------
-## Create minikube cluster
+# Steps
+
+## Create minikube cluster locally
 
 ![1](https://github.com/eslamkhaled560/Sprints-Tasks/assets/54172897/e5e88181-ae44-4535-8761-9e0fa775f58a)
 
