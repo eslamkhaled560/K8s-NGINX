@@ -5,73 +5,57 @@ Establishing a Local Kubernetes Environment and Deploying Replicas of Nginx Imag
 -----------------------------------------
 # Steps
 
-## Create minikube cluster locally
+## Install Dependencies
 
-![1](https://github.com/eslamkhaled560/Sprints-Tasks/assets/54172897/e5e88181-ae44-4535-8761-9e0fa775f58a)
-
------------------------------------------
-## Create nginx deployment with 3 replicas
-
-- Code link for deployment yaml file: [nginx-depl.yaml](https://github.com/eslamkhaled560/Sprints-Tasks/blob/main/12-%20Kubenates/1-%20Deployments%20and%20Services/nginx-depl.yaml)
+- Create minikube cluster locally
 
 ```
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-spec:
-  selector:
-    matchLabels:
-      app: nginx
-  replicas: 3
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.7.9
-        ports:
-        - containerPort: 80
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
 
-![2](https://github.com/eslamkhaled560/Sprints-Tasks/assets/54172897/826d0a9c-e280-4d76-b4fb-f11cf7899bdb)
-![3](https://github.com/eslamkhaled560/Sprints-Tasks/assets/54172897/2c1eab2b-1ffc-4a70-beed-4e8ac7166d73)
-
------------------------------------------
-## Create service to point to this deployment , type cluster IP 
-
-- Code link for service yaml file: [nginx-service.yaml](https://github.com/eslamkhaled560/Sprints-Tasks/blob/main/12-%20Kubenates/1-%20Deployments%20and%20Services/nginx-service.yaml)
-
+- Start minikube
 ```
-apiVersion: v1
-kind: Service
-metadata:
-  creationTimestamp: null
-  name: nginx-deployment
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 80
-  selector:
-    app: nginx
-  type: ClusterIP
-status:
-  loadBalancer: {}
+minikube start
 ```
 
-![4](https://github.com/eslamkhaled560/Sprints-Tasks/assets/54172897/9eae97b2-bbd9-4514-a3b5-e453b1702923)
+- Install kubectl
+```
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl
+sudo apt-get install -y apt-transport-https       # for Debian based OS
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y kubectl
+```
 
------------------------------------------
-##  Create debug pod to test the service
+## Deploy Application
 
-- Before installing curl
+- Move to the application directory
+```
+cd K8s-NGINX
+```
 
-![5](https://github.com/eslamkhaled560/Sprints-Tasks/assets/54172897/a74f56a3-9c9e-4e8e-8b7d-f2631eab183e)
+- Deploy application with the service
+```
+kubectl apply -f nginx-depl.yaml
+kubectl apply -f nginx-service.yaml
+```
 
-- After installing curl
+- Get service ip, nginx-deployment Cluster-IP
+```
+kubectl get svc
+```
+You will find it inder: nginx-deployment Cluster-IP
+
+- Check deplyment connection with a debug pod that will be destroys automatically after closing it.
+```
+kubectl run -it debug-pod --restart=Never --image=ubuntu -- bin bash
+    ## inside debug-pod
+    curl <nginx-deployment Cluster-IP>        # install curl if needed
+```
+
+- Output should look like this
 
 ![6](https://github.com/eslamkhaled560/Sprints-Tasks/assets/54172897/7acf556d-9afe-4979-891d-3cf8407b90c1)
 
