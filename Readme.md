@@ -5,9 +5,10 @@ Establishing a Local Kubernetes Environment and Deploying Replicas of Nginx Imag
 -----------------------------------------
 # Steps
 
-- Clone repository
+- Clone repository and move to it
 ```
 git clone https://github.com/eslamkhaled560/K8s-NGINX.git
+cd K8s-NGINX
 ```
 
 ## Install Dependencies
